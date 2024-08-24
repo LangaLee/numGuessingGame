@@ -23,7 +23,6 @@ const secretNum = Math.ceil(Math.random() * 100);
 const winningMessage = `You win!!! this session's number was ${secretNum} \n`;
 let guess;
 let numOfGuesses = 0;
-const stats = `Number of guesses: ${numOfGuesses}`;
 
 const playGame = async () => {
   console.log(chalk.greenBright.bold(welcomeMessage));
@@ -41,7 +40,7 @@ const playGame = async () => {
   }
   chalkAnimation.rainbow(winningMessage, 1).start();
   pause(500);
-  console.log(stats);
+  console.log(`Number of guesses: ${numOfGuesses}`);
   pause(3000);
 };
 
