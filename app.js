@@ -1,7 +1,8 @@
-import { input } from "@inquirer/prompts";
+import { input, number } from "@inquirer/prompts";
 import chalk from "chalk";
 import figlet from "figlet";
 import chalkAnimation from "chalk-animation";
+import fs from "fs/promises";
 const pause = (time) => {
   const timeAfterPause = Date.now() + time;
   while (Date.now() < timeAfterPause) {
@@ -23,7 +24,7 @@ const secretNum = Math.ceil(Math.random() * 100);
 const winningMessage = `You win!!! this session's number was ${secretNum} \n`;
 let guess;
 let numOfGuesses = 0;
-
+const prevScores = await fs.readFile("./prevScores", "utf-8");
 const playGame = async () => {
   console.log(chalk.greenBright.bold(welcomeMessage));
   pause(1000);
@@ -39,8 +40,16 @@ const playGame = async () => {
     giveHints(secretNum, guess);
   }
   chalkAnimation.rainbow(winningMessage, 1).start();
-  pause(500);
-  console.log(`Number of guesses: ${numOfGuesses}`);
+  await fs.appendFile("./prevScores", `${numOfGuesses}\n`);
+  const highScore = prevScores
+    .split("\n")
+    .every((score) => score > numOfGuesses);
+  await pause(500);
+  highScore
+    ? console.log(
+        `You guessed the number in ${numOfGuesses} guesses, which is a new Highscore`
+      )
+    : console.log(`You guessed the number in ${numOfGuesses} guesses`);
   pause(3000);
 };
 
